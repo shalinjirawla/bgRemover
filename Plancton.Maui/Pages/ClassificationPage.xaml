@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Plancton.Maui.Pages.ClassificationPage"
+             xmlns:viewmodels="clr-namespace:Plancton.Maui.ViewModels"
+             Title="Classification Page"
+             x:Name="ThisPage">
+    <ContentPage.BindingContext>
+        <viewmodels:ClassificationViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <StackLayout BackgroundColor="White" IsVisible="{Binding IsImageLoaded}" HorizontalOptions="Center" VerticalOptions="Center">
+                <Image x:Name="imagePreview" Source="{Binding PreviewImage}" MinimumHeightRequest="300" MinimumWidthRequest="350" MaximumHeightRequest="450" MaximumWidthRequest="350" Aspect="AspectFit" />
+            </StackLayout>
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+
+            <VerticalStackLayout Padding="10" Spacing="10" IsVisible="{Binding IsImageLoaded}">
+                <Entry x:Name="ChipEntry"  Text="{Binding ChipEntry, Mode=TwoWay}" Placeholder="Type Tag and press Enter" Completed="Entry_Completed" />
+                <ScrollView Orientation="Vertical">
+                    <FlexLayout x:Name="ChipContainer" Direction="Row" Wrap="Wrap" AlignItems="End" BindableLayout.ItemsSource="{Binding Chips}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border BackgroundColor="#F1F5F9" Stroke="#CBD5E1" StrokeThickness="1" Margin="2" Padding="8,8" StrokeShape="RoundRectangle 5">
+                                    <HorizontalStackLayout VerticalOptions="End">
+                                        <Label Text="{Binding}" FontSize="14" TextColor="#0F172A" VerticalOptions="End" />
+                                        <ImageButton Source="close.png" HeightRequest="16" MinimumHeightRequest="10" WidthRequest="16" BackgroundColor="Transparent"
+                                            HorizontalOptions="Center" VerticalOptions="Center" CommandParameter="{Binding}" 
+                                            Command="{Binding BindingContext.RemoveChipCommand, Source={x:Reference Name=ThisPage}}" />
+                                    </HorizontalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </ScrollView>
+            </VerticalStackLayout>
+
+            <Button Text="Save Tags to Image" Command="{Binding SaveTagsCommand}" IsVisible="{Binding IsImageLoaded}" />
+
+            <Button Text="Pick Image" Command="{Binding PickImageCommand}" IsVisible="{Binding IsImageNotLoaded}" />
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="10">
+                <!-- Row 0 -->
+                <Button Text="Red Background" Command="{Binding ReplaceWithRedCommand}" IsVisible="{Binding IsImageLoaded}" Grid.Row="0" Grid.Column="0" />
+                <Button Text="Transparent Background" Command="{Binding ReplaceWithTransparentCommand}" IsVisible="{Binding IsImageLoaded}" Grid.Row="0" Grid.Column="1" />
+
+                <!-- Row 1 -->
+                <Button Text="Pick Custom Background" Command="{Binding PickCustomColorCommand}" IsVisible="{Binding IsImageLoaded}" Grid.Row="1" Grid.Column="0" />
+                <Button Text="Pick New Image" Command="{Binding PickNewImageCommand}" IsVisible="{Binding IsImageLoaded}" Grid.Row="1" Grid.Column="1" />
+            </Grid>
+            <Button Text="Save Image" Command="{Binding SaveImageCommand}" IsVisible="{Binding IsImageLoaded}" />
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
